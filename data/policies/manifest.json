@@ -1,0 +1,29 @@
+
+{
+  "policies": [
+    {
+      "policy_id": "AXA-CAR",
+      "filename": "AXA-CAR.pdf",
+      "branch": "auto",
+      "included_in_repository": false,
+      "source_type": "public_policy_document",
+      "source_url": ""
+    },
+    {
+      "policy_id": "AXA-CAR-PLUS",
+      "filename": "AXA-CAR-PLUS.pdf",
+      "branch": "auto",
+      "included_in_repository": false,
+      "source_type": "public_policy_document",
+      "source_url": ""
+    },
+    {
+      "policy_id": "AVIVA-SHORT-TERM",
+      "filename": "AVIVA-SHORT-TERM.pdf",
+      "branch": "auto",
+      "included_in_repository": false,
+      "source_type": "public_policy_document",
+      "source_url": ""
+    }
+  ]
+}

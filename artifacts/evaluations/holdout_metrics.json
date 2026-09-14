@@ -1,0 +1,46 @@
+{
+  "holdout": {
+    "test_size": 3084,
+    "fraud_cases": 185,
+    "roc_auc": 0.755227,
+    "pr_auc": 0.526455,
+    "pr_auc_definition": "trapezoidal AUC(recall, precision), matching the supplied TFM benchmark",
+    "average_precision": 0.121292,
+    "at_decision_threshold": {
+      "threshold": 0.574822,
+      "accuracy": 0.6093,
+      "precision": 0.1256,
+      "recall": 0.9243,
+      "f1_score": 0.2211,
+      "confusion_matrix": [
+        [
+          1708,
+          1191
+        ],
+        [
+          14,
+          171
+        ]
+      ]
+    }
+  },
+  "benchmark_reproduction": {
+    "expected_pr_auc": 0.5264554156198319,
+    "expected_roc_auc": 0.755226872267231,
+    "expected_recall": 0.9243243243243243,
+    "expected_precision": 0.12555066079295155,
+    "expected_f1": 0.22107304460245636,
+    "expected_confusion_matrix": [
+      [
+        1708,
+        1191
+      ],
+      [
+        14,
+        171
+      ]
+    ],
+    "expected_threshold": 0.5748224375777465,
+    "threshold_difference": 0.0
+  }
+}

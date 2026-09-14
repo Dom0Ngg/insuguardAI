@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: insurguard-postgres
+    environment:
+      POSTGRES_DB: insurguard
+      POSTGRES_USER: insurguard
+      POSTGRES_PASSWORD: insurguard
+    ports:
+      - "5432:5432"
+    volumes:
+      - insurguard_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U insurguard -d insurguard"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  insurguard-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: insurguard-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./artifacts:/app/artifacts
+      - huggingface_cache:/root/.cache/huggingface
+    environment:
+      PYTHONPATH: /app
+      DATABASE_URL: postgresql://insurguard:insurguard@postgres:5432/insurguard
+      RAG_EMBEDDING_MODEL: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+      RAG_EMBEDDING_DIMENSION: "384"
+      RAG_CHUNK_SIZE_WORDS: "220"
+      RAG_CHUNK_OVERLAP_WORDS: "40"
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_POLLING_ENABLED: ${TELEGRAM_POLLING_ENABLED:-true}
+      TELEGRAM_POLL_TIMEOUT: ${TELEGRAM_POLL_TIMEOUT:-25}
+      TELEGRAM_DROP_PENDING_UPDATES: ${TELEGRAM_DROP_PENDING_UPDATES:-false}
+      TELEGRAM_API_BASE_URL: ${TELEGRAM_API_BASE_URL:-https://api.telegram.org}
+    command: >
+      sh -c "python scripts/index_policies.py &&
+             python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000"
+    restart: unless-stopped
+
+volumes:
+  insurguard_pgdata:
+  huggingface_cache:

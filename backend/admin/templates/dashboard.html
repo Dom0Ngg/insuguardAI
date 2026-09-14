@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/admin/static/admin.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">IG</div>
+      <div><strong>InsurGuard AI</strong><span>Supervisor Console</span></div>
+    </div>
+    <nav>
+      <button class="nav active" data-view="overview">Centro de supervisión</button>
+      <button class="nav" data-view="claims">Bandeja de casos</button>
+      <button class="nav" data-view="telegram">Canal Telegram</button>
+      <button class="nav" data-view="runs">Auditoría técnica</button>
+      <button class="nav" data-view="mlops">MLOps</button>
+      <button class="nav" data-view="rag">Asistente de pólizas</button>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/docs" target="_blank">Swagger API ↗</a>
+      <span>Apoyo a decisión · no decisión automática</span>
+      <span id="clock"></span>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">SUPERVISIÓN · DECISIÓN ASISTIDA · TRAZABILIDAD</p>
+        <h1 id="page-title">Centro de supervisión</h1>
+      </div>
+      <div class="top-actions">
+        <span class="status-dot"></span><span>Servicios activos</span>
+        <button id="refresh" class="button secondary">Actualizar</button>
+      </div>
+    </header>
+
+    <section id="view-overview" class="view active">
+      <div id="kpis" class="kpi-grid"></div>
+      <div class="grid two">
+        <article class="panel">
+          <div class="panel-head"><div><p class="eyebrow">FLUJO DE DECISIÓN</p><h2>Flujo multiagente de preanálisis</h2></div></div>
+          <div class="pipeline">
+            <div class="pipe-step"><span>1</span><b>Entrada</b><small>Telegram / API</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><span>2</span><b>Adjuntos</b><small>Archivo original · revisión</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><span>3</span><b>Validación</b><small>Calidad del expediente</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><span>4</span><b>Fraude</b><small>Logistic L1 + SHAP</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><span>5</span><b>Supervisor</b><small>Consulta RAG de pólizas</small></div>
+            <div class="pipe-arrow">→</div>
+            <div class="pipe-step"><span>6</span><b>Resolución</b><small>Ground truth</small></div>
+          </div>
+          <p class="muted">El sistema prioriza y explica el riesgo. Los adjuntos del cliente se revisan manualmente. El especialista consulta las pólizas mediante RAG y registra el ground truth cuando conoce el resultado real.</p>
+        </article>
+        <article class="panel">
+          <div class="panel-head"><div><p class="eyebrow">SALUD DEL SISTEMA</p><h2>Componentes de apoyo</h2></div></div>
+          <div id="system-status" class="status-list"></div>
+        </article>
+      </div>
+      <div class="grid two">
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">BANDEJA PRIORITARIA</p><h2>Casos recientes</h2></div><button class="link-button" data-go="claims">Abrir bandeja</button></div><div id="overview-claims"></div></article>
+        <article class="panel"><div class="panel-head"><div><p class="eyebrow">AUDITORÍA</p><h2>Últimas ejecuciones</h2></div><button class="link-button" data-go="runs">Ver trazas</button></div><div id="overview-runs"></div></article>
+      </div>
+    </section>
+
+    <section id="view-claims" class="view">
+      <div class="section-toolbar">
+        <div><p class="eyebrow">WORKBENCH DEL ESPECIALISTA</p><h2>Bandeja de expedientes</h2><p class="muted">Prioriza, inspecciona la evidencia y registra el resultado confirmado cuando esté disponible.</p></div>
+        <div class="claims-filters">
+          <input id="claims-filter" placeholder="Buscar claim, riesgo, ground truth u origen">
+          <select id="claims-status-filter" aria-label="Filtrar bandeja por estado">
+            <option value="">Todos los estados</option>
+            <option value="pending_analysis">Pendiente de análisis</option>
+            <option value="pending_ground_truth">Ground truth pendiente</option>
+            <option value="ground_truth_confirmed">Ground truth confirmado</option>
+            <option value="reference_data">Datos de referencia</option>
+          </select>
+        </div>
+      </div>
+      <article class="panel table-panel"><div id="claims-table"></div></article>
+      <article id="claim-detail" class="panel detail-panel hidden"></article>
+    </section>
+
+    <section id="view-telegram" class="view">
+      <div class="grid two telegram-layout">
+        <article class="panel">
+          <div class="panel-head"><div><p class="eyebrow">CANAL DE CAPTURA</p><h2>Sesiones Telegram</h2></div><span id="tg-mode" class="badge"></span></div>
+          <div id="tg-sessions"></div>
+        </article>
+        <article class="panel chat-panel">
+          <div class="panel-head"><div><p class="eyebrow">CONVERSACIÓN</p><h2 id="chat-title">Simulador local</h2></div></div>
+          <div id="chat-messages" class="chat-messages"><div class="empty">Selecciona una sesión o utiliza el simulador.</div></div>
+          <form id="tg-simulator" class="chat-form">
+            <input id="tg-chat-id" value="100000001" aria-label="Chat ID">
+            <input id="tg-text" placeholder="Escribe NUEVO para iniciar un claim" autocomplete="off" required>
+            <button class="button" type="submit">Enviar</button>
+          </form>
+          <p class="muted tiny">El simulador ejecuta el mismo Intake Agent sin realizar llamadas a Telegram.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="view-runs" class="view">
+      <div class="section-toolbar"><div><p class="eyebrow">AUDITORÍA TÉCNICA</p><h2>Ejecuciones del pipeline</h2><p class="muted">Salida, estado y duración de cada agente para reproducibilidad y trazabilidad.</p></div></div>
+      <div class="grid runs-grid"><article class="panel"><div id="runs-list"></div></article><article id="run-detail" class="panel"><div class="empty">Selecciona una ejecución para ver todos los agentes.</div></article></div>
+    </section>
+
+    <section id="view-mlops" class="view">
+      <div class="section-toolbar"><div><p class="eyebrow">MONITORIZACIÓN DEL MODELO</p><h2>MLOps</h2><p class="muted">Drift, calidad, rendimiento con ground truth y criterio de reentrenamiento controlado.</p></div></div>
+      <div id="mlops-cards" class="grid three"></div>
+      <article class="panel"><div class="panel-head"><div><p class="eyebrow">ESTADO COMPLETO</p><h2>Monitorización</h2></div></div><pre id="mlops-json"></pre></article>
+    </section>
+
+    <section id="view-rag" class="view">
+      <div class="section-toolbar"><div><p class="eyebrow">HERRAMIENTA DEL SUPERVISOR</p><h2>Asistente de pólizas · PostgreSQL + pgvector</h2><p class="muted">Pregunta libre sobre una póliza concreta. Si una página no tiene texto nativo suficiente, el indexador aplica OCR solo a esa página.</p></div></div>
+      <div id="rag-cards" class="kpi-grid"></div>
+      <article class="panel policy-console">
+        <div class="panel-head"><div><p class="eyebrow">CONSULTA LIBRE</p><h2>Preguntar a una póliza</h2></div><span class="badge">Solo supervisor</span></div>
+        <div class="policy-review-fields">
+          <label><span>Póliza</span><select id="rag-policy-select"></select></label>
+          <label class="policy-question"><span>Pregunta</span><textarea id="rag-policy-query" rows="3" placeholder="Ej.: ¿Qué exclusiones existen para daños por colisión?"></textarea></label>
+        </div>
+        <div class="policy-review-presets">
+          <button type="button" class="chip-button" data-rag-preset="¿Qué coberturas principales incluye esta póliza?">Coberturas</button>
+          <button type="button" class="chip-button" data-rag-preset="¿Qué exclusiones importantes contiene esta póliza?">Exclusiones</button>
+          <button type="button" class="chip-button" data-rag-preset="¿Qué franquicias, límites o condiciones deben revisarse?">Franquicias y límites</button>
+          <button type="button" class="chip-button" data-rag-preset="¿Qué documentación exige la póliza para tramitar un siniestro?">Documentación</button>
+        </div>
+        <div class="policy-review-actions"><button id="run-rag-policy-query" class="button" type="button">🔎 Consultar póliza</button><small>La respuesta siempre muestra las fuentes recuperadas y permite abrir el PDF original.</small></div>
+        <div id="rag-query-result" class="rag-query-result"><div class="empty">Selecciona una póliza y formula una pregunta.</div></div>
+      </article>
+      <article class="panel"><div class="panel-head"><div><p class="eyebrow">ÍNDICE Y OCR DE PÓLIZAS</p><h2>Estado de indexación</h2></div></div><div id="rag-documents"></div><details class="technical-details"><summary>Ver estado técnico completo</summary><div class="details-body"><pre id="rag-json"></pre></div></details></article>
+    </section>
+  </main>
+
+  <div id="evidence-modal" class="evidence-modal hidden" role="dialog" aria-modal="true" aria-labelledby="evidence-modal-title">
+    <div class="evidence-modal-backdrop" data-close-modal></div>
+    <div class="evidence-modal-card">
+      <div class="evidence-modal-head">
+        <div><p id="evidence-modal-eyebrow" class="eyebrow">EVIDENCIA</p><h2 id="evidence-modal-title">Detalle</h2></div>
+        <button class="modal-close" data-close-modal aria-label="Cerrar">×</button>
+      </div>
+      <div id="evidence-modal-meta" class="evidence-modal-meta"></div>
+      <div id="evidence-modal-body" class="evidence-modal-body"></div>
+      <div id="evidence-modal-actions" class="evidence-modal-actions"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script src="/admin/static/admin.js"></script>
+</body>
+</html>

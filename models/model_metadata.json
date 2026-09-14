@@ -1,0 +1,340 @@
+{
+  "model_name": "InsurGuardVehicleFraudLogisticL1",
+  "model_type": "LogisticRegressionL1",
+  "model_version": "3.0-kaggle-logistic-l1-benchmark-exact",
+  "training_file": "data/kaggle/fraud_oracle.csv",
+  "training_dataset_sha256": "8b6aa59764ef4f8b058598d3e8f325ef3623f52f4b1cd4ef946baebb5ccfa9a6",
+  "created_at": "2026-09-06T17:33:15.630387+00:00",
+  "training_summary": {
+    "status": "trained",
+    "dataset": "Vehicle Insurance Claim Fraud Detection (Kaggle)",
+    "total_samples": 15420,
+    "training_samples": 12336,
+    "holdout_samples": 3084,
+    "positive_labels": 923,
+    "negative_labels": 14497,
+    "fraud_prevalence": 0.059857,
+    "raw_features": [
+      "Month",
+      "WeekOfMonth",
+      "DayOfWeek",
+      "Make",
+      "AccidentArea",
+      "DayOfWeekClaimed",
+      "MonthClaimed",
+      "WeekOfMonthClaimed",
+      "Sex",
+      "MaritalStatus",
+      "Age",
+      "Fault",
+      "PolicyType",
+      "VehicleCategory",
+      "VehiclePrice",
+      "Deductible",
+      "DriverRating",
+      "Days_Policy_Accident",
+      "Days_Policy_Claim",
+      "PastNumberOfClaims",
+      "AgeOfVehicle",
+      "AgeOfPolicyHolder",
+      "PoliceReportFiled",
+      "WitnessPresent",
+      "AgentType",
+      "NumberOfSuppliments",
+      "AddressChange_Claim",
+      "NumberOfCars",
+      "Year",
+      "BasePolicy"
+    ],
+    "raw_feature_count": 30,
+    "target": "FraudFound_P",
+    "excluded_identifiers": [
+      "PolicyNumber",
+      "RepNumber"
+    ],
+    "age_zero_rows_treated_as_missing": 320,
+    "preprocessing": {
+      "numerical": "FeatureUnion(StandardScaler -> KNNImputer(k=5, weights=distance), MissingIndicator(missing-only))",
+      "categorical": "SimpleImputer(Missing) -> OneHotEncoder(drop=first, handle_unknown=ignore)",
+      "variance_filter_threshold": 0.01,
+      "supervised_selector": "SelectFromModel(LogisticRegression L1, C=0.1, threshold=mean, max_features=65)",
+      "selected_encoded_features": 24
+    },
+    "selected_features": [
+      "At_Fault_Without_Police",
+      "Age_is_missing",
+      "Month_Dec",
+      "Month_Jul",
+      "Month_Mar",
+      "Month_Nov",
+      "Make_VW",
+      "MonthClaimed_Aug",
+      "MonthClaimed_May",
+      "MonthClaimed_Nov",
+      "Sex_Male",
+      "Fault_Third Party",
+      "PolicyType_Sedan - Collision",
+      "PolicyType_Sport - Collision",
+      "VehiclePrice_40000 to 59000",
+      "VehiclePrice_less than 20000",
+      "AgeOfVehicle_4 years",
+      "AgeOfVehicle_5 years",
+      "PoliceReportFiled_Yes",
+      "AgentType_Internal",
+      "NumberOfSuppliments_3 to 5",
+      "AddressChange_Claim_2 to 3 years",
+      "AddressChange_Claim_4 to 8 years",
+      "BasePolicy_Liability"
+    ],
+    "class_weight": {
+      "0": 1.0,
+      "1": 15.715447154471544
+    },
+    "scale_positive_weight": 15.715447154471544,
+    "regularization": "L1",
+    "solver": "liblinear",
+    "C": 0.001,
+    "classifier_nonzero_coefficients": 2,
+    "decision_threshold": 0.5748224375777465,
+    "train_test_split": {
+      "test_size": 0.2,
+      "random_state": 42,
+      "stratified": true
+    },
+    "threshold_calibration": {
+      "method": "5-fold stratified OOF predictions on processed training data; threshold maximizing F1",
+      "n_splits": 5,
+      "shuffle": true,
+      "random_state": 42
+    }
+  },
+  "metrics": {
+    "holdout": {
+      "test_size": 3084,
+      "fraud_cases": 185,
+      "roc_auc": 0.755227,
+      "pr_auc": 0.526455,
+      "pr_auc_definition": "trapezoidal AUC(recall, precision), matching the supplied TFM benchmark",
+      "average_precision": 0.121292,
+      "at_decision_threshold": {
+        "threshold": 0.574822,
+        "accuracy": 0.6093,
+        "precision": 0.1256,
+        "recall": 0.9243,
+        "f1_score": 0.2211,
+        "confusion_matrix": [
+          [
+            1708,
+            1191
+          ],
+          [
+            14,
+            171
+          ]
+        ]
+      }
+    },
+    "benchmark_reproduction": {
+      "expected_pr_auc": 0.5264554156198319,
+      "expected_roc_auc": 0.755226872267231,
+      "expected_recall": 0.9243243243243243,
+      "expected_precision": 0.12555066079295155,
+      "expected_f1": 0.22107304460245636,
+      "expected_confusion_matrix": [
+        [
+          1708,
+          1191
+        ],
+        [
+          14,
+          171
+        ]
+      ],
+      "expected_threshold": 0.5748224375777465,
+      "threshold_difference": 0.0
+    }
+  },
+  "operational_thresholds": {
+    "decision_threshold": 0.5748224375777465,
+    "study_threshold": 0.5748224375777465,
+    "source": "5-fold OOF Precision-Recall/F1 calibration from supplied benchmark"
+  },
+  "selected_features": [
+    "At_Fault_Without_Police",
+    "Age_is_missing",
+    "Month_Dec",
+    "Month_Jul",
+    "Month_Mar",
+    "Month_Nov",
+    "Make_VW",
+    "MonthClaimed_Aug",
+    "MonthClaimed_May",
+    "MonthClaimed_Nov",
+    "Sex_Male",
+    "Fault_Third Party",
+    "PolicyType_Sedan - Collision",
+    "PolicyType_Sport - Collision",
+    "VehiclePrice_40000 to 59000",
+    "VehiclePrice_less than 20000",
+    "AgeOfVehicle_4 years",
+    "AgeOfVehicle_5 years",
+    "PoliceReportFiled_Yes",
+    "AgentType_Internal",
+    "NumberOfSuppliments_3 to 5",
+    "AddressChange_Claim_2 to 3 years",
+    "AddressChange_Claim_4 to 8 years",
+    "BasePolicy_Liability"
+  ],
+  "top_feature_importance": [
+    {
+      "feature": "BasePolicy_Liability",
+      "coefficient": -0.91894,
+      "absolute_importance": 0.91894,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "At_Fault_Without_Police",
+      "coefficient": 0.587635,
+      "absolute_importance": 0.587635,
+      "direction": "fraud"
+    },
+    {
+      "feature": "Age_is_missing",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Month_Dec",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Month_Jul",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Month_Mar",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Month_Nov",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Make_VW",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "MonthClaimed_Aug",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "MonthClaimed_May",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "MonthClaimed_Nov",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Sex_Male",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "Fault_Third Party",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "PolicyType_Sedan - Collision",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "PolicyType_Sport - Collision",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "VehiclePrice_40000 to 59000",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "VehiclePrice_less than 20000",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "AgeOfVehicle_4 years",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "AgeOfVehicle_5 years",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "PoliceReportFiled_Yes",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "AgentType_Internal",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "NumberOfSuppliments_3 to 5",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "AddressChange_Claim_2 to 3 years",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    },
+    {
+      "feature": "AddressChange_Claim_4 to 8 years",
+      "coefficient": 0.0,
+      "absolute_importance": 0.0,
+      "direction": "legitimate"
+    }
+  ],
+  "artifacts": {
+    "pipeline_path": "models/fraud_pipeline.joblib",
+    "metadata_path": "models/model_metadata.json",
+    "holdout_metrics_path": "artifacts/evaluations/holdout_metrics.json",
+    "holdout_scores_path": "artifacts/evaluations/holdout_scores.npy"
+  }
+}
